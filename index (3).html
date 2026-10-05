@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EEAR RPG — Operação 22/11</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#080c14;
+    color:#fff;
+    min-height:100vh;
+}
+
+header{
+    background:#0d1422;
+    border-bottom:1px solid #26334a;
+    padding:20px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.logo h1{
+    color:#57e389;
+    font-size:25px;
+}
+
+.logo p{
+    color:#8793a8;
+    margin-top:5px;
+}
+
+.prova{
+    background:#151e2d;
+    padding:12px 18px;
+    border-radius:12px;
+    text-align:center;
+}
+
+.prova strong{
+    color:#ffca55;
+    font-size:20px;
+}
+
+main{
+    padding:25px 20px 80px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:16px;
+}
+
+.card{
+    background:#101827;
+    border:1px solid #26334a;
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:18px;
+}
+
+.card h2{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;
+}
+
+.stat{
+    background:#151e2d;
+    padding:15px;
+    border-radius:12px;
+}
+
+.stat span{
+    display:block;
+    color:#8793a8;
+    font-size:13px;
+}
+
+.stat strong{
+    display:block;
+    font-size:23px;
+    margin-top:5px;
+}
+
+.progress{
+    width:100%;
+    height:13px;
+    background:#252f40;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:12px;
+}
+
+.progress div{
+    height:100%;
+    background:#57e389;
+    width:0%;
+}
+
+.subject{
+    background:#151e2d;
+    border:1px solid #29354a;
+    border-radius:14px;
+    padding:18px;
+}
+
+.subject h3{
+    margin-bottom:7px;
+}
+
+.subject p{
+    color:#8995a9;
+    font-size:14px;
+    min-height:35px;
+}
+
+button,
+.botao{
+    border:0;
+    background:#57e389;
+    color:#07120b;
+    padding:11px 15px;
+    border-radius:9px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:12px;
+    text-decoration:none;
+    display:inline-block;
+}
+
+button:hover,
+.botao:hover{
+    filter:brightness(1.1);
+}
+
+.secundario{
+    background:#273247;
+    color:#fff;
+}
+
+.telegram{
+    background:#229ED9;
+    color:white;
+    width:100%;
+    text-align:center;
+    font-size:16px;
+    padding:15px;
+}
+
+.timer{
+    font-size:45px;
+    font-weight:bold;
+    text-align:center;
+    margin:20px 0;
+}
+
+.timer-buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.mission{
+    background:#151e2d;
+    border-radius:10px;
+    padding:13px;
+    margin-bottom:9px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.mission.done{
+    opacity:.5;
+    text-decoration:line-through;
+}
+
+.boss{
+    text-align:center;
+}
+
+.boss-life{
+    height:20px;
+    background:#252f40;
+    border-radius:20px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.boss-life div{
+    height:100%;
+    background:#e45454;
+    width:100%;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:9px;
+    border:1px solid #344258;
+    background:#0c1320;
+    color:#fff;
+    margin-top:10px;
+}
+
+.telegram-fixo{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#229ED9;
+    color:#fff;
+    padding:14px 18px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:bold;
+    box-shadow:0 8px 25px rgba(0,0,0,.4);
+    z-index:999;
+}
+
+.section-title{
+    margin:25px 0 15px;
+}
+
+small{
+    color:#8995a9;
+}
+
+.mission .info{flex:1}
+.mission .info small{display:block;margin-top:4px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:#273247;color:#ffca55;margin-left:6px}
+.road{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;background:#151e2d;margin-bottom:6px;font-size:14px}
+.road.atual{border:1px solid #57e389}
+.road.bloq{opacity:.5}
+.tempo{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:#151e2d;margin-bottom:8px;border:1px solid transparent}
+.tempo.ativo{border-color:#57e389;box-shadow:0 0 14px rgba(87,227,137,.25)}
+.tempo .nome{font-weight:bold}
+.tempo .rel{font-size:24px;font-weight:bold;font-variant-numeric:tabular-nums}
+.tempo button{margin-top:0}
+@media(max-width:600px){.tempo{flex-wrap:wrap}.tempo .rel{font-size:20px}}
+.barra-geral{position:fixed;left:20px;bottom:20px;background:#101827;border:1px solid #57e389;color:#fff;padding:10px 16px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.4);z-index:999;text-align:center;line-height:1.2}
+.barra-geral small{display:block;font-size:11px}
+.barra-geral strong{font-size:20px;font-variant-numeric:tabular-nums;color:#57e389}
+@media(max-width:600px){.barra-geral{left:12px;bottom:12px;padding:8px 12px}.barra-geral strong{font-size:17px}}
+.total-materias{text-align:center;color:#8995a9;margin-top:10px}
+
+@media(max-width:600px){
+
+    .telegram-fixo{
+        right:12px;
+        bottom:12px;
+    }
+
+    .timer{
+        font-size:37px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="container topo">
+
+<div class="logo">
+<h1>✈️ EEAR RPG</h1>
+<p>Operação 22/11 — Sua missão é chegar preparado.</p>
+</div>
+
+<div class="prova">
+<small>TEMPO PARA A PROVA</small>
+<br>
+<strong id="countdown">Calculando...</strong>
+</div>
+
+</div>
+</header>
+
+<main class="container">
+
+<div class="card">
+
+<h2>🎖️ Seu personagem</h2>
+
+<div class="stats">
+
+<div class="stat">
+<span>PATENTE</span>
+<strong id="patente">Recruta</strong>
+</div>
+
+<div class="stat">
+<span>NÍVEL</span>
+<strong id="nivel">1</strong>
+</div>
+
+<div class="stat">
+<span>XP</span>
+<strong id="xp">0</strong>
+</div>
+
+<div class="stat">
+<span>FOCO TOTAL</span>
+<strong id="horas">0h</strong>
+</div>
+
+<div class="stat">
+<span>QUESTÕES</span>
+<strong id="questoes">0</strong>
+</div>
+
+<div class="stat">
+<span>SEQUÊNCIA</span>
+<strong id="streak">0 🔥</strong>
+</div>
+
+</div>
+
+<div class="progress">
+<div id="xpBar"></div>
+</div>
+<small id="xpInfo"></small>
+
+</div>
+
+
+<!-- TELEGRAM -->
+
+<div class="card">
+
+<h2>📚 Central de Materiais</h2>
+
+<p style="color:#8995a9">
+Acesse sua pasta/canal de materiais para estudar Matemática,
+Física, Inglês e outras matérias.
+</p>
+
+<a
+href="https://web.telegram.org/k/#-2044608399"
+target="_blank"
+rel="noopener noreferrer"
+class="botao telegram"
+>
+✈️ ABRIR MATERIAIS NO TELEGRAM
+</a>
+
+</div>
+
+
+<!-- MATÉRIAS -->
+
+<h2 class="section-title">📚 Matérias</h2>
+
+<div class="grid">
+
+<div class="subject">
+
+<h3>📐 Matemática</h3>
+
+<p>
+Matemática básica, álgebra, geometria,
+trigonometria e exercícios.
+</p>
+
+<button data-mat="Matemática" onclick="estudar('Matemática')">
+Estudar Matemática
+</button>
+
+</div>
+
+
+<div class="subject">
+
+<h3>⚛️ Física</h3>
+
+<p>
+Mecânica, cinemática, dinâmica,
+eletricidade e exercícios.
+</p>
+
+<button data-mat="Física" onclick="estudar('Física')">
+Estudar Física
+</button>
+
+</div>
+
+
+<div class="subject">
+
+<h3>📝 Português</h3>
+
+<p>
+Gramática, interpretação,
+literatura e exercícios.
+</p>
+
+<button data-mat="Português" onclick="estudar('Português')">
+Estudar Português
+</button>
+
+</div>
+
+
+<div class="subject">
+
+<h3>🇬🇧 Inglês</h3>
+
+<p>
+Vocabulário, interpretação,
+gramática e questões.
+</p>
+
+<button data-mat="Inglês" onclick="estudar('Inglês')">
+Estudar Inglês
+</button>
+
+</div>
+
+</div>
+
+
+<!-- CRONÔMETRO -->
+
+<h2 class="section-title">⏱️ Cronômetro livre</h2>
+
+<div class="card">
+
+<p>
+Use para registrar qualquer sessão de estudo.
+</p>
+
+<div class="timer" id="cronometro">
+00:00:00
+</div>
+
+<div class="timer-buttons">
+
+<button onclick="startTimer()">
+▶ Iniciar
+</button>
+
+<button class="secundario" onclick="pauseTimer()">
+⏸ Pausar
+</button>
+
+<button class="secundario" onclick="resetTimer()">
+↻ Resetar
+</button>
+
+<button onclick="saveTimer()">
+💾 Salvar estudo
+</button>
+
+</div>
+
+</div>
+
+
+<!-- POMODORO -->
+
+<h2 class="section-title">🍅 Pomodoro</h2>
+
+<div class="card">
+
+<p>
+Complete 25 minutos focado e ganhe XP.
+</p>
+
+<div class="timer" id="pomodoro">
+25:00
+</div>
+
+<div class="timer-buttons">
+
+<button onclick="startPomodoro()">
+▶ Começar
+</button>
+
+<button class="secundario" onclick="resetPomodoro()">
+↻ Reiniciar
+</button>
+
+</div>
+
+</div>
+
+
+<!-- MISSÕES -->
+
+<h2 class="section-title">⚔️ Missões de hoje <small id="missCount"></small></h2>
+
+<div class="card">
+<small id="missInfo"></small>
+<div id="missoes" style="margin-top:12px"></div>
+</div>
+
+<h2 class="section-title">🗺️ Campanha: Níveis 1 a 10</h2>
+
+<div class="card">
+<div id="roadmap"></div>
+</div>
+
+
+<!-- BOSS -->
+
+<h2 class="section-title">👹 Boss semanal</h2>
+
+<div class="card boss">
+
+<h2>SIMULADO EEAR</h2>
+
+<p>
+Faça um simulado e use sua pontuação para atacar o Boss.
+</p>
+
+<div class="boss-life">
+<div id="bossLife"></div>
+</div>
+
+<strong id="bossText">
+1000 / 1000 HP
+</strong>
+
+<input
+type="number"
+id="simulado"
+placeholder="Quantas questões você acertou?"
+>
+
+<button onclick="attackBoss()">
+⚔️ ATACAR BOSS
+</button>
+
+</div>
+
+<h2 class="section-title">⏳ Tempo estudado por matéria</h2>
+
+<div class="card">
+<small>Cada matéria tem seu cronômetro próprio e só zera se você clicar em "↻ Reiniciar".</small><br><small id="tempoStatus">Clique em "Estudar" numa matéria para começar a contar o tempo dela.</small>
+<div id="tempos" style="margin-top:12px"></div>
+<div class="total-materias">Total: <strong id="tempoTotal">00:00:00</strong></div>
+<button class="secundario" onclick="pausarMateria()">⏸ Pausar tudo</button>
+<button class="secundario" onclick="reiniciarTudo(this)">↻ Reiniciar tudo</button>
+</div>
+
+<h2 class="section-title">♾️ Cronômetro geral</h2>
+
+<div class="card">
+<small>Soma de todo o seu estudo desde o início. Só zera se você usar "Reiniciar tudo" lá em cima, com dupla confirmação.</small>
+<div class="timer" id="geral">00:00:00</div>
+<div class="total-materias" id="geralHoras"></div>
+</div>
+
+</main>
+
+
+<div class="barra-geral"><small>♾️ ESTUDO TOTAL</small><strong id="geralBarra">00:00:00</strong></div>
+
+<a
+href="https://web.telegram.org/k/#-2044608399"
+target="_blank"
+rel="noopener noreferrer"
+class="telegram-fixo"
+>
+✈️ Telegram
+</a>
+
+
+<script>
+const KEY="eearRPG";
+const MAXLV=10;
+const PATENTES=["Recruta","Aluno","Soldado","Cabo","Sargento","Combatente","Elite","Veterano","Comandante","Ás da EEAR"];
+
+const TOPICOS={
+ "Matemática":[["Operações e frações","Porcentagem e regra de três"],["Equações do 1º grau","Conjuntos numéricos"],["Razão e proporção","Sistemas lineares simples"],["Equação do 2º grau","Funções do 1º grau"],["Função quadrática","Geometria plana (áreas)"],["Progressões (PA e PG)","Análise combinatória"],["Probabilidade","Trigonometria no triângulo retângulo"],["Geometria espacial","Logaritmos e exponencial"],["Geometria analítica","Matrizes e determinantes"],["Números complexos e polinômios","Circunferência trigonométrica"]],
+ "Física":[["Unidades e grandezas","Notação científica"],["Cinemática: MU","Gráficos do movimento"],["MUV","Queda livre e lançamentos"],["Leis de Newton","Atrito"],["Trabalho e energia","Potência e rendimento"],["Impulso e quantidade de movimento","Gravitação"],["Hidrostática","Termologia e calorimetria"],["Termodinâmica","Óptica geométrica"],["Eletrostática","Eletrodinâmica (circuitos)"],["Eletromagnetismo","Ondas e acústica"]],
+ "Português":[["Acentuação e ortografia","Classes de palavras"],["Pontuação","Concordância nominal"],["Concordância verbal","Regência"],["Crase","Pronomes e colocação pronominal"],["Interpretação de texto","Tipologia e gêneros textuais"],["Orações coordenadas","Orações subordinadas"],["Figuras de linguagem","Semântica e sinonímia"],["Coesão e coerência","Funções da linguagem"],["Literatura (escolas literárias)","Variação linguística"],["Reescrita de frases e redação oficial","Textos longos e inferência"]],
+ "Inglês":[["Vocabulário básico","Verb to be"],["Present simple e continuous","Artigos e plurais"],["Past simple","Pronomes e possessivos"],["Future (will / going to)","Preposições"],["Present perfect","Modal verbs"],["Reading comprehension","Cognatos e falsos cognatos"],["Conditionals","Comparatives e superlatives"],["Passive voice","Relative pronouns"],["Reported speech","Phrasal verbs"],["Inferência em textos técnicos","Simulado de leitura"]]
+};
+const ICONES={"Matemática":"📐","Física":"⚛️","Português":"📝","Inglês":"🇬🇧","Revisão":"🧠"};
+
+/* dificuldade por nível */
+const qtd=L=>10+5*(L-1);        /* questões: 10 ... 55 */
+const mins=L=>20+5*(L-1);       /* minutos: 20 ... 65 */
+const xpMissao=L=>100+20*(L-1); /* XP: 100 ... 280 */
+const xpNivel=L=>500+250*(L-1); /* XP para passar do nível L: 500 ... 2750 */
+const dificuldade=L=>L<=3?"Fácil":L<=6?"Médio":L<=9?"Difícil":"Elite";
+
+function info(xp){
+ let L=1;
+ while(L<MAXLV && xp>=xpNivel(L)){xp-=xpNivel(L);L++;}
+ return {L:L,cur:xp,need:L<MAXLV?xpNivel(L):0};
+}
+
+/* datas locais */
+function dkey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function ontem(){const d=new Date();d.setDate(d.getDate()-1);return dkey(d);}
+function semana(){const d=new Date();const dia=(d.getDay()+6)%7;d.setDate(d.getDate()-dia);return dkey(d);}
+
+/* sorteio fixo por dia */
+function rng(seedStr){
+ let h=1779033703^seedStr.length;
+ for(let i=0;i<seedStr.length;i++){h=Math.imul(h^seedStr.charCodeAt(i),3432918353);h=h<<13|h>>>19;}
+ let a=h>>>0;
+ return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+}
+
+function gerarMissoes(L,dia){
+ const r=rng(dia+"|"+L);
+ const mats=["Matemática","Física","Português","Inglês","Revisão"];
+ for(let i=mats.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[mats[i],mats[j]]=[mats[j],mats[i]];}
+ const q=qtd(L),m=mins(L),xp=xpMissao(L);
+ return mats.slice(0,4).map(function(mat){
+  let texto,qs=0;
+  if(mat==="Revisão"){
+   const n=3+L;
+   texto=r()<0.5?"Refaça "+n+" questões que você errou":"Revise "+n+" erros e anote o porquê de cada um";
+  }else{
+   const topico=TOPICOS[mat][L-1][Math.floor(r()*2)];
+   const f=Math.floor(r()*3);
+   if(f===0){texto="Resolva "+q+" questões de "+topico;qs=q;}
+   else if(f===1){texto="Estude "+m+" min de "+topico+" e faça "+Math.ceil(q/2)+" exercícios";qs=Math.ceil(q/2);}
+   else{texto="Mini simulado de "+mat+": "+q+" questões cronometradas ("+topico+")";qs=q;}
+  }
+  return {mat:mat,icone:ICONES[mat],texto:texto,xp:xp,q:qs,done:false};
+ });
+}
+
+/* dados */
+let data={xp:0,minutos:0,questoes:0,streak:0,lastStudy:null,boss:1000,bossWeek:null,today:null,tempos:{},ativa:null,inicio:null,vitalicio:null};
+try{
+ const salvo=JSON.parse(localStorage.getItem(KEY));
+ if(salvo&&typeof salvo==="object"){Object.assign(data,salvo);}
+}catch(e){}
+
+function iniciarVitalicio(){
+ if(typeof data.vitalicio!=="number"){
+  let soma=0;
+  Object.keys(data.tempos||{}).forEach(function(k){soma+=data.tempos[k]||0;});
+  data.vitalicio=soma+(data.minutos||0)*60;
+ }
+}
+
+function garantirDia(){
+ iniciarVitalicio();
+ const hoje=dkey();
+ const L=info(data.xp).L;
+ if(!data.today||data.today.date!==hoje||!Array.isArray(data.today.missions)){
+  data.today={date:hoje,missions:gerarMissoes(L,hoje)};
+ }
+ if(data.lastStudy&&data.lastStudy!==hoje&&data.lastStudy!==ontem()){data.streak=0;}
+ const sem=semana();
+ if(data.bossWeek!==sem){data.bossWeek=sem;data.boss=1000;}
+}
+
+function salvar(){
+ try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+ atualizar();
+}
+
+function diaEstudado(){
+ const hoje=dkey();
+ if(data.lastStudy!==hoje){
+  data.streak=(data.lastStudy===ontem())?data.streak+1:1;
+  data.lastStudy=hoje;
+ }
+}
+
+function ganharXP(n){
+ const antes=info(data.xp).L;
+ data.xp+=n;
+ diaEstudado();
+ const depois=info(data.xp).L;
+ if(depois>antes){
+  setTimeout(function(){alert("⬆️ SUBIU DE NÍVEL!\n\nNível "+depois+" • "+PATENTES[depois-1]+"\nAs missões ficam mais difíceis a partir de amanhã.");},50);
+ }
+}
+
+function atualizar(){
+ const i=info(data.xp);
+ document.getElementById("xp").innerText=data.xp;
+ document.getElementById("nivel").innerText=i.L+(i.L===MAXLV?" (MAX)":"");
+ document.getElementById("patente").innerText=PATENTES[i.L-1];
+ document.getElementById("questoes").innerText=data.questoes;
+ document.getElementById("streak").innerText=data.streak+" 🔥";
+ document.getElementById("horas").innerText=(data.minutos/60).toFixed(1)+"h";
+ if(i.L===MAXLV){
+  document.getElementById("xpBar").style.width="100%";
+  document.getElementById("xpInfo").innerText="Nível máximo alcançado!";
+ }else{
+  document.getElementById("xpBar").style.width=((i.cur/i.need)*100)+"%";
+  document.getElementById("xpInfo").innerText=i.cur+" / "+i.need+" XP para o nível "+(i.L+1);
+ }
+ document.getElementById("bossLife").style.width=Math.max(0,(data.boss/1000)*100)+"%";
+ document.getElementById("bossText").innerText=Math.max(0,data.boss)+" / 1000 HP";
+
+ /* missões */
+ const ms=data.today.missions;
+ const feitas=ms.filter(function(m){return m.done;}).length;
+ document.getElementById("missCount").innerText=" "+feitas+"/"+ms.length;
+ document.getElementById("missInfo").innerText="Dificuldade "+dificuldade(i.L)+" • Nível "+i.L+" • novas missões todo dia";
+ const box=document.getElementById("missoes");
+ box.innerHTML="";
+ ms.forEach(function(m,idx){
+  const div=document.createElement("div");
+  div.className="mission"+(m.done?" done":"");
+  const inf=document.createElement("div");
+  inf.className="info";
+  inf.innerText=m.icone+" "+m.texto;
+  const b=document.createElement("button");
+  b.innerText=m.done?"✅ Concluído":"+"+m.xp+" XP";
+  b.disabled=m.done;
+  b.onclick=function(){concluirMissao(idx);};
+  div.appendChild(inf);div.appendChild(b);box.appendChild(div);
+ });
+
+ desenharTempos();
+
+ /* campanha */
+ const rm=document.getElementById("roadmap");
+ rm.innerHTML="";
+ for(let L=1;L<=MAXLV;L++){
+  const d=document.createElement("div");
+  d.className="road"+(L===i.L?" atual":"")+(L>i.L?" bloq":"");
+  d.innerText=(L<i.L?"✅":L===i.L?"▶":"🔒")+" Nível "+L+" • "+PATENTES[L-1]+" | "+qtd(L)+" questões • "+mins(L)+" min • +"+xpMissao(L)+" XP/missão • "+dificuldade(L);
+  rm.appendChild(d);
+ }
+}
+
+function concluirMissao(idx){
+ const m=data.today.missions[idx];
+ if(!m||m.done)return;
+ m.done=true;
+ data.questoes+=m.q;
+ ganharXP(m.xp);
+ salvar();
+}
+
+/* contador da prova */
+function atualizarContador(){
+ const prova=new Date("2026-11-22T00:00:00-03:00");
+ const diff=prova-new Date();
+ if(diff<=0){document.getElementById("countdown").innerText="DIA DA MISSÃO!";return;}
+ const dias=Math.floor(diff/86400000);
+ const horas=Math.floor((diff/3600000)%24);
+ const minutos=Math.floor((diff/60000)%60);
+ document.getElementById("countdown").innerText=dias+"d "+horas+"h "+minutos+"min";
+}
+setInterval(atualizarContador,1000);
+atualizarContador();
+
+/* cronômetro livre */
+let segundos=0,timerInterval=null;
+function formatTime(t){
+ return String(Math.floor(t/3600)).padStart(2,"0")+":"+String(Math.floor((t%3600)/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
+}
+function startTimer(){
+ if(timerInterval)return;
+ timerInterval=setInterval(function(){segundos++;document.getElementById("cronometro").innerText=formatTime(segundos);},1000);
+}
+function pauseTimer(){clearInterval(timerInterval);timerInterval=null;}
+function resetTimer(){pauseTimer();segundos=0;document.getElementById("cronometro").innerText="00:00:00";}
+function saveTimer(){
+ if(segundos<60){alert("Estude pelo menos 1 minuto antes de salvar.");return;}
+ const m=Math.floor(segundos/60);
+ data.minutos+=m;
+ data.vitalicio=(data.vitalicio||0)+m*60;
+ const ganho=Math.floor(m/25)*100;
+ ganharXP(ganho);
+ alert("Sessão salva! "+m+" minutos estudados. +"+ganho+" XP");
+ resetTimer();
+ salvar();
+}
+
+/* pomodoro */
+let pomoSeg=25*60,pomoInt=null;
+function updatePomodoro(){
+ document.getElementById("pomodoro").innerText=String(Math.floor(pomoSeg/60)).padStart(2,"0")+":"+String(pomoSeg%60).padStart(2,"0");
+}
+function startPomodoro(){
+ if(pomoInt)return;
+ pomoInt=setInterval(function(){
+  pomoSeg--;updatePomodoro();
+  if(pomoSeg<=0){
+   clearInterval(pomoInt);pomoInt=null;
+   data.minutos+=25;
+   data.vitalicio=(data.vitalicio||0)+25*60;
+   ganharXP(100);
+   salvar();
+   alert("🍅 Pomodoro concluído! +100 XP");
+   resetPomodoro();
+  }
+ },1000);
+}
+function resetPomodoro(){clearInterval(pomoInt);pomoInt=null;pomoSeg=25*60;updatePomodoro();}
+
+/* boss */
+function attackBoss(){
+ const input=document.getElementById("simulado");
+ const acertos=Number(input.value);
+ if(!acertos||acertos<0){alert("Digite sua quantidade de acertos.");return;}
+ if(data.boss<=0){alert("O boss já foi derrotado esta semana. Ele volta na segunda!");return;}
+ const dano=acertos*10;
+ data.boss-=dano;
+ data.questoes+=acertos;
+ let xp=acertos*5;
+ if(data.boss<=0){data.boss=0;xp+=500;alert("🏆 BOSS DERROTADO! +500 XP bônus!");}
+ else{alert("⚔️ Você causou "+dano+" de dano!");}
+ input.value="";
+ ganharXP(xp);
+ salvar();
+}
+
+const MATERIAS=["Matemática","Física","Português","Inglês"];
+
+function fmt(t){
+ t=Math.floor(t);
+ return String(Math.floor(t/3600)).padStart(2,"0")+":"+String(Math.floor((t%3600)/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
+}
+
+function segMateria(m){
+ let t=(data.tempos&&data.tempos[m])||0;
+ if(data.ativa===m&&data.inicio){t+=Math.max(0,(Date.now()-data.inicio)/1000);}
+ return t;
+}
+
+function fecharSessao(){
+ if(data.ativa&&data.inicio){
+  const dec=Math.max(0,(Date.now()-data.inicio)/1000);
+  data.vitalicio=(data.vitalicio||0)+dec;
+  data.tempos[data.ativa]=segMateria(data.ativa);
+ }
+ data.ativa=null;
+ data.inicio=null;
+}
+
+function estudar(materia){
+ if(data.ativa===materia){
+  fecharSessao();
+ }else{
+  fecharSessao();
+  data.ativa=materia;
+  data.inicio=Date.now();
+  diaEstudado();
+ }
+ salvar();
+}
+
+/* confirmação dentro da página (não depende de pop-up do navegador) */
+let pendente=null,pendTimer=null;
+function confirmar(chave,botao,textoOriginal,acao){
+ if(pendente===chave){
+  clearTimeout(pendTimer);pendente=null;botao.innerText=textoOriginal;acao();return;
+ }
+ pendente=chave;
+ botao.innerText="⚠️ Clique de novo para confirmar";
+ clearTimeout(pendTimer);
+ pendTimer=setTimeout(function(){pendente=null;botao.innerText=textoOriginal;},4000);
+}
+
+function reiniciarMateria(m,botao){
+ confirmar("m_"+m,botao,"↻ Reiniciar",function(){
+  const estavaAtiva=(data.ativa===m);
+  fecharSessao();
+  data.tempos[m]=0;
+  if(estavaAtiva){data.ativa=m;data.inicio=Date.now();}
+  salvar();
+ });
+}
+
+function reiniciarTudo(botao){
+ confirmar("tudo",botao,"↻ Reiniciar tudo",function(){
+  const estava=data.ativa;
+  data.tempos={};data.vitalicio=0;data.ativa=null;data.inicio=null;
+  if(estava){data.ativa=estava;data.inicio=Date.now();}
+  salvar();
+ });
+}
+
+function pausarMateria(){fecharSessao();salvar();}
+
+function desenharTempos(){
+ const box=document.getElementById("tempos");
+ if(!box)return;
+ if(box.children.length!==MATERIAS.length){
+  box.innerHTML="";
+  MATERIAS.forEach(function(m){
+   const d=document.createElement("div");
+   d.className="tempo";d.id="t_"+m;
+   const n=document.createElement("span");n.className="nome";n.innerText=ICONES[m]+" "+m;
+   const r=document.createElement("span");r.className="rel";r.id="r_"+m;
+   const b=document.createElement("button");b.id="b_"+m;
+   b.onclick=function(){estudar(m);};
+   const x=document.createElement("button");x.className="secundario";x.innerText="↻ Reiniciar";
+   x.onclick=function(){reiniciarMateria(m,x);};
+   const g=document.createElement("span");g.style.display="flex";g.style.gap="6px";g.appendChild(b);g.appendChild(x);
+   d.appendChild(n);d.appendChild(r);d.appendChild(g);
+   box.appendChild(d);
+  });
+ }
+ let total=0;
+ MATERIAS.forEach(function(m){
+  const t=segMateria(m);total+=t;
+  document.getElementById("r_"+m).innerText=fmt(t);
+  const ativo=data.ativa===m;
+  document.getElementById("t_"+m).className="tempo"+(ativo?" ativo":"");
+  document.getElementById("b_"+m).innerText=ativo?"⏸ Pausar":"▶ Estudar";
+ });
+ document.getElementById("tempoTotal").innerText=fmt(total);
+ let vit=data.vitalicio||0;
+ if(data.ativa&&data.inicio){vit+=Math.max(0,(Date.now()-data.inicio)/1000);}
+ document.getElementById("geral").innerText=fmt(vit);
+ document.getElementById("geralBarra").innerText=fmt(vit);
+ document.getElementById("geralHoras").innerText="≈ "+(vit/3600).toFixed(1)+" horas estudadas no total";
+ document.getElementById("tempoStatus").innerText=data.ativa
+  ?"🟢 Contando o tempo de "+data.ativa+"... (continua contando mesmo se fechar a aba; pause quando parar)"
+  :"Clique em \"Estudar\" numa matéria para começar a contar o tempo dela.";
+ document.querySelectorAll("[data-mat]").forEach(function(b){
+  const m=b.getAttribute("data-mat");
+  b.innerText=(data.ativa===m)?"⏸ Pausar "+m:"Estudar "+m;
+ });
+}
+setInterval(desenharTempos,1000);
+
+garantirDia();
+updatePomodoro();
+salvar();
+</script>
+
+</body>
+</html>
